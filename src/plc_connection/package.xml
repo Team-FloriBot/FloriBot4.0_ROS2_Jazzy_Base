@@ -1,25 +1,24 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>base</name>
+  <name>plc_connection</name>
   <version>0.0.0</version>
-  <description>Base Node for Kinematics Calculation</description>
+  <description>The plc_connection package</description>
+
   <maintainer email="aaronstark1406@gmail.com">Aaron Stark</maintainer>
   <maintainer email="jorth@stud.hs-heilbronn.de">Jannis Orth</maintainer>
-  <license>TODO: License declaration</license>
+
+  <license>TODO</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>rosidl_default_generators</buildtool_depend>
 
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>
-  <depend>geometry_msgs</depend>
-  <depend>nav_msgs</depend>
+  <depend>tf2</depend>
   <depend>tf2_ros</depend>
-  <depend>sensor_msgs</depend>
-  
-  <depend>eigen</depend>
-  <depend>boost</depend>
+  <depend>geometry_msgs</depend>
+  <depend>base</depend>
 
   <exec_depend>rosidl_default_runtime</exec_depend>
   <exec_depend>ros2launch</exec_depend>
@@ -28,7 +27,5 @@
 
   <export>
     <build_type>ament_cmake</build_type>
-    <ros1_bridge mapping_rules="mapping_rule_Wheels.yaml"/>
-    <ros1_bridge mapping_rules="mapping_rule_Angle.yaml"/>
-  </export>
+    </export>
 </package>

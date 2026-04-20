@@ -1,68 +1,101 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.5)
 project(base)
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+# Empfehlung: C++17 für modernere ROS2 Distributionen
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 
+# 1. Pakete finden
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(rcl_interfaces REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
-find_package(sensor_msgs REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system)
+find_package(rosidl_default_generators REQUIRED)
+
+# 2. Eigene Interfaces (Messages) generieren
+set(msg_files
+  "msg/Wheels.msg"
+  "msg/Angle.msg"
+)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
-  "msg/WheelTicks4.msg"
-  "msg/WheelVelocities4.msg"
+  ${msg_files}
   DEPENDENCIES std_msgs
 )
 
+# 3. Libraries erstellen
+# Bibliothek 1: Antriebslogik
+add_library(articulated_drive src/drives/articulated_drive.cpp)
+target_include_directories(articulated_drive PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+ament_target_dependencies(articulated_drive 
+  rclcpp tf2_ros std_msgs geometry_msgs nav_msgs sensor_msgs Eigen3
+)
+
+# Bibliothek 2: Publisher Logik
+add_library(basePublisher src/base_node/base_publisher.cpp)
+target_include_directories(basePublisher PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+# Linkt gegen die eigene Lib und ROS2
+target_link_libraries(basePublisher articulated_drive)
+ament_target_dependencies(basePublisher 
+  rclcpp tf2_ros std_msgs geometry_msgs nav_msgs sensor_msgs Eigen3
+)
+
+# 4. Executables (Nodes) erstellen
+add_executable(${PROJECT_NAME}_node src/${PROJECT_NAME}_node/${PROJECT_NAME}_node.cpp)
+target_link_libraries(${PROJECT_NAME}_node articulated_drive basePublisher)
+ament_target_dependencies(${PROJECT_NAME}_node 
+  rclcpp tf2_ros std_msgs geometry_msgs nav_msgs sensor_msgs Eigen3
+)
+
+add_executable(angle2tf src/${PROJECT_NAME}_node/angle2tf.cpp)
+target_link_libraries(angle2tf articulated_drive basePublisher)
+ament_target_dependencies(angle2tf 
+  rclcpp tf2_ros std_msgs geometry_msgs nav_msgs sensor_msgs Eigen3
+)
+
+# 5. Interface-Verknüpfung (Damit die Nodes die eigenen Messages finden)
+# WICHTIG: Das muss für alle Ziele gemacht werden, die deine .msg Dateien nutzen
+rosidl_target_interfaces(articulated_drive ${PROJECT_NAME} "rosidl_typesupport_cpp")
+rosidl_target_interfaces(basePublisher ${PROJECT_NAME} "rosidl_typesupport_cpp")
+rosidl_target_interfaces(${PROJECT_NAME}_node ${PROJECT_NAME} "rosidl_typesupport_cpp")
+rosidl_target_interfaces(angle2tf ${PROJECT_NAME} "rosidl_typesupport_cpp")
+
+# --- 6. Export für andere Pakete (wie plc_connection) ---
+# Wir exportieren die Bibliotheken und die Runtime für die Messages
 ament_export_dependencies(rosidl_default_runtime)
+ament_export_include_directories(include)
+ament_export_libraries(articulated_drive basePublisher)
 
-include_directories(include)
-
-add_library(base_kinematics
-  src/library/kinematics_calculator.cpp
+# --- 7. Installation ---
+# Bibliotheken installieren
+install(TARGETS articulated_drive basePublisher
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
 )
-ament_target_dependencies(base_kinematics rclcpp)
 
-rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} "rosidl_typesupport_cpp")
-
-target_link_libraries(base_kinematics ${cpp_typesupport_target})
-
-add_executable(kinematics_node
-  src/nodes/kinematics_node.cpp
-)
-ament_target_dependencies(kinematics_node
-  geometry_msgs nav_msgs rclcpp rcl_interfaces std_msgs tf2 tf2_ros
-)
-target_link_libraries(kinematics_node base_kinematics ${cpp_typesupport_target})
-
-add_executable(hardware_node
-  src/nodes/hardware_node.cpp
-)
-ament_target_dependencies(hardware_node
-  rclcpp sensor_msgs std_msgs
-)
-target_link_libraries(hardware_node ${cpp_typesupport_target})
-
-install(TARGETS
-  base_kinematics
-  kinematics_node
-  hardware_node
+# Nodes installieren
+install(TARGETS ${PROJECT_NAME}_node angle2tf
   DESTINATION lib/${PROJECT_NAME}
 )
 
-install(DIRECTORY include/
-  DESTINATION include
-)
-
-install(DIRECTORY launch params
+# Verzeichnisse und Dateien
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
+install(FILES 
+  mapping_rule_Angle.yaml 
+  mapping_rule_Wheels.yaml 
   DESTINATION share/${PROJECT_NAME}
 )
 
