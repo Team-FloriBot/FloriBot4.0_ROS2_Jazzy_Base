@@ -47,7 +47,7 @@ source ~/base_ws/install/setup.bash
 ## Nodes starten
 
 ```bash
-ros2 launch base base_launch.py
+ros2 launch base base_node.launch.py
 ```
 in neuem Terminal:
 
