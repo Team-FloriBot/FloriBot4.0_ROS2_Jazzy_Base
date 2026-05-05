@@ -127,13 +127,13 @@ void KinematicsPublisher::SpeedCallback(const base::msg::Wheels::SharedPtr msg)
     q.setRPY(0, 0, OdomPose.theta);
 
     // TF Msg
-    Transform.child_frame_id = "base_link";
     Transform.header.frame_id = "odom";
+    Transform.child_frame_id = "base_footprint";
     Transform.header.stamp = msg->header.stamp;
 
     Transform.transform.translation.x = OdomPose.x;
     Transform.transform.translation.y = OdomPose.y;
-    Transform.transform.translation.z = wheelDiameter_ / 2;
+    Transform.transform.translation.z = 0.0;
 
     Transform.transform.rotation.w = q.getW();
     Transform.transform.rotation.x = q.getX();
@@ -142,7 +142,7 @@ void KinematicsPublisher::SpeedCallback(const base::msg::Wheels::SharedPtr msg)
 
     // ToDo: Add Covariance
     // Odom Msg
-    OdomMsg.child_frame_id = "base_link";
+    OdomMsg.child_frame_id = "base_footprint";
     OdomMsg.header.frame_id = "odom";
     OdomMsg.header.stamp = msg->header.stamp;
 
