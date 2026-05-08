@@ -43,6 +43,7 @@ class ArticulatedDrive
         rclcpp::Time TimeStamp_;
         double axesLength_, wheelDiameter_, wheelCircumference_, wheelRadius_, frontLength_, rearLength_, wheelBase_;
         double targetSpeed_, targetOmega_;
+        bool timestamp_initialized_;
         
 };
 
