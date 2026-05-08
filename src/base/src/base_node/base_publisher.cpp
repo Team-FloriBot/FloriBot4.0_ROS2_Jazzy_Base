@@ -143,7 +143,10 @@ void KinematicsPublisher::SpeedCallback(const base::msg::Wheels::SharedPtr msg)
     actual_speed.Rear.leftWheel   = msg->rear_left;
     actual_speed.Rear.rightWheel  = msg->rear_right;
 
-    rclcpp::Time stamp(msg->header.stamp);
+    rclcpp::Time stamp(
+    msg->header.stamp.sec,
+    msg->header.stamp.nanosec,
+    this->get_clock()->get_clock_type());
 
     odom_pose = Drive_.forwardKinematics(actual_speed, stamp);
 
