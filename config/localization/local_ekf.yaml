@@ -1,0 +1,65 @@
+ekf_filter_node:
+  ros__parameters:
+    frequency: 30.0
+    sensor_timeout: 0.2
+    two_d_mode: true
+
+    transform_time_offset: 0.0
+    transform_timeout: 0.1
+
+    print_diagnostics: true
+    debug: false
+
+    publish_tf: true
+    publish_acceleration: false
+
+    map_frame: map
+    odom_frame: odom
+    base_link_frame: base_footprint
+    world_frame: odom
+
+    odom0: /odom
+    odom0_queue_size: 20
+    odom0_differential: false
+    odom0_relative: false
+
+    # Reihenfolge:
+    # x, y, z,
+    # roll, pitch, yaw,
+    # vx, vy, vz,
+    # vroll, vpitch, vyaw,
+    # ax, ay, az
+    #
+    # Für den Anfang nur Geschwindigkeit fusionieren:
+    # vx und vyaw aus der Radodometrie.
+    odom0_config: [
+      false, false, false,
+      false, false, false,
+      true,  false, false,
+      false, false, true,
+      false, false, false
+    ]
+
+    # Topic ggf. an euren IMU-Treiber anpassen.
+    imu0: /imu/data
+    imu0_queue_size: 50
+    imu0_differential: false
+    imu0_relative: true
+    imu0_remove_gravitational_acceleration: true
+
+    # Für 2D zunächst yaw und yaw-rate fusionieren.
+    imu0_config: [
+      false, false, false,
+      false, false, true,
+      false, false, false,
+      false, false, true,
+      false, false, false
+    ]
+
+    use_control: false
+
+    odom0_pose_rejection_threshold: 5.0
+    odom0_twist_rejection_threshold: 2.0
+
+    imu0_pose_rejection_threshold: 0.8
+    imu0_twist_rejection_threshold: 0.8
