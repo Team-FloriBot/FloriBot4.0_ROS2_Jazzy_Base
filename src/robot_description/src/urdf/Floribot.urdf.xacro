@@ -323,7 +323,7 @@
     </plugin>
   </gazebo>
 
-  <link name="front_laser_link">
+  <link name="sick_front_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -347,15 +347,15 @@
 
   <joint name="front_laser_joint" type="fixed">
     <parent link="axesFront"/>
-    <child link="front_laser_link"/>
+    <child link="sick_front_link"/>
     <origin xyz="${front_sensor_x} 0 ${sensor_z}" rpy="${pi} 0 0"/>
   </joint>
 
-  <gazebo reference="front_laser_link">
+  <gazebo reference="sick_front_link">
     <sensor name="front_laser" type="gpu_lidar">
       <pose>0 0 0 0 0 0</pose>
       <topic>/sensors/scan_front</topic>
-      <gz_frame_id>front_laser_link</gz_frame_id>
+      <gz_frame_id>sick_front_link</gz_frame_id>
       <update_rate>10</update_rate>
       <always_on>true</always_on>
       <visualize>true</visualize>
@@ -382,7 +382,7 @@
     </sensor>
   </gazebo>
 
-  <link name="rear_laser_link">
+  <link name="sick_rear_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -406,15 +406,15 @@
 
   <joint name="rear_laser_joint" type="fixed">
     <parent link="axesRear"/>
-    <child link="rear_laser_link"/>
+    <child link="sick_rear_link"/>
     <origin xyz="${rear_sensor_x} 0 ${sensor_z}" rpy="${pi} 0 ${pi}"/>
   </joint>
 
-  <gazebo reference="rear_laser_link">
+  <gazebo reference="sick_rear_link">
     <sensor name="rear_laser" type="gpu_lidar">
       <pose>0 0 0 0 0 0</pose>
       <topic>/sensors/scan_rear</topic>
-      <gz_frame_id>rear_laser_link</gz_frame_id>
+      <gz_frame_id>sick_rear_link</gz_frame_id>
       <update_rate>10</update_rate>
       <always_on>true</always_on>
       <visualize>true</visualize>
