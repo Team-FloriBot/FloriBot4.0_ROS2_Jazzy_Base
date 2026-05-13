@@ -35,15 +35,5 @@ def generate_launch_description():
                 "robot_description": robot_description_content,
                 "use_sim_time": use_sim_time
             }]
-        ),
-        
-        Node(
-            package="joint_state_publisher",
-            executable="joint_state_publisher",
-            name="joint_state_publisher",
-            parameters=[{
-                "robot_description": robot_description_content, # Unverzichtbar!
-                "use_sim_time": use_sim_time
-            }]
         )
     ])
