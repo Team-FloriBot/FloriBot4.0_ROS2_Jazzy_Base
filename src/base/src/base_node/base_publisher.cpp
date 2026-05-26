@@ -185,7 +185,7 @@ void KinematicsPublisher::SpeedCallback(const base::msg::Wheels::SharedPtr msg)
     odom_msg.twist.twist = Drive_.getSpeed();
 
     OdometryPublisher_->publish(odom_msg);
-    tf_broadaster_->sendTransform(transform_msg);
+    // tf_broadaster_->sendTransform(transform_msg);
 }
 
 // Publiziert body_angle als JointState für robot_state_publisher
