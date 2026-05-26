@@ -1,1 +1,18 @@
+cmd_vel_selector:
+  ros__parameters:
+    output_topic: "/cmd_vel"
 
+    # Wird länger keine Nachricht der aktiven Quelle empfangen,
+    # publiziert der Selector einmalig eine Nullgeschwindigkeit.
+    source_timeout_seconds: 0.15
+
+    # Beim Start ist keine Bewegungsquelle freigegeben.
+    initial_source: "none"
+
+    topics:
+      webteleop: "/cmd_vel/webteleop"
+      task1: "/cmd_vel/task1"
+      task2: "/cmd_vel/task2"
+      task3: "/cmd_vel/task3"
+      task4: "/cmd_vel/task4"
+      task5: "/cmd_vel/task5"
