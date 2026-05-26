@@ -1,1 +1,40 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd"
+             schematypens="http://www.w3.org/2001/XMLSchema"?>
 
+<package format="3">
+  <name>cmd_vel_selector</name>
+  <version>0.0.1</version>
+
+  <description>
+    Selects one active cmd_vel source and forwards it to the Floribot base.
+  </description>
+
+  <maintainer email="timo.gochsen@gmail.com">Timo Zimmermann</maintainer>
+
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>rosidl_default_generators</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>std_srvs</depend>
+
+  <exec_depend>rosidl_default_runtime</exec_depend>
+  <exec_depend>ros2launch</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <!-- Wird nur benötigt, weil base_with_cmd_vel_selector.launch.py
+       den vorhandenen base-Launch einbindet. -->
+  <exec_depend>base</exec_depend>
+
+  <member_of_group>rosidl_interface_packages</member_of_group>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
