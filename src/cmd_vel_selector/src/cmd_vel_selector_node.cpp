@@ -38,10 +38,6 @@ public:
       "output_topic",
       "/cmd_vel");
 
-    source_timeout_seconds_ = this->declare_parameter<double>(
-      "source_timeout_seconds",
-      0.15);
-
     active_source_ = this->declare_parameter<std::string>(
       "initial_source",
       "none");
@@ -87,10 +83,6 @@ public:
 
     selected_at_ = this->now();
     last_active_message_time_ = this->now();
-
-    watchdog_timer_ = this->create_wall_timer(
-      20ms,
-      std::bind(&CmdVelSelectorNode::watchdogCallback, this));
 
     publishStop();
     publishActiveSource();
@@ -144,8 +136,6 @@ private:
 
     last_active_message_time_ = this->now();
     has_received_message_from_active_source_ = true;
-    timeout_stop_published_ = false;
-
     output_publisher_->publish(message);
   }
 
@@ -183,7 +173,6 @@ private:
     active_source_ = request->source;
     selected_at_ = this->now();
     has_received_message_from_active_source_ = false;
-    timeout_stop_published_ = false;
 
     // Sicherheitsstopp beim Umschalten:
     // Die neue Quelle muss nach der Auswahl aktiv einen neuen Befehl senden.
@@ -214,7 +203,6 @@ private:
     active_source_ = "none";
     selected_at_ = this->now();
     has_received_message_from_active_source_ = false;
-    timeout_stop_published_ = true;
 
     publishStop();
     publishActiveSource();
@@ -226,42 +214,6 @@ private:
     RCLCPP_WARN(
       this->get_logger(),
       "Stop-Service ausgefuehrt. Aktive Quelle ist jetzt 'none'.");
-  }
-
-  void watchdogCallback()
-  {
-    std::lock_guard<std::mutex> lock(mutex_);
-
-    if (active_source_ == "none") {
-      return;
-    }
-
-    if (source_timeout_seconds_ <= 0.0) {
-      return;
-    }
-
-    if (timeout_stop_published_) {
-      return;
-    }
-
-    const rclcpp::Time reference_time =
-      has_received_message_from_active_source_
-      ? last_active_message_time_
-      : selected_at_;
-
-    const double elapsed_seconds =
-      (this->now() - reference_time).seconds();
-
-    if (elapsed_seconds > source_timeout_seconds_) {
-      publishStop();
-      timeout_stop_published_ = true;
-
-      RCLCPP_WARN(
-        this->get_logger(),
-        "Timeout der aktiven Quelle '%s' nach %.3f s. Nullgeschwindigkeit publiziert.",
-        active_source_.c_str(),
-        elapsed_seconds);
-    }
   }
 
   void publishStop()
@@ -310,10 +262,7 @@ private:
   std::string output_topic_;
   std::string active_source_;
 
-  double source_timeout_seconds_{0.15};
-
   bool has_received_message_from_active_source_{false};
-  bool timeout_stop_published_{false};
 
   rclcpp::Time selected_at_;
   rclcpp::Time last_active_message_time_;
@@ -327,8 +276,6 @@ private:
 
   rclcpp::Service<SelectSource>::SharedPtr select_source_service_;
   rclcpp::Service<Trigger>::SharedPtr stop_service_;
-
-  rclcpp::TimerBase::SharedPtr watchdog_timer_;
 };
 
 int main(int argc, char * argv[])
