@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <memory>
 #include <cmath>
+#include <string>
 
 // Konstruktor des Nodes
 PlcConnectionNode::PlcConnectionNode()
@@ -239,12 +240,28 @@ void PlcConnectionNode::SendRecv()
     }
     catch (const std::runtime_error& e)
     {
-        RCLCPP_WARN_THROTTLE(
-            this->get_logger(),
-            *this->get_clock(),
-            1000,
-            "PLC SendRecv failed: %s",
-            e.what());
+        const std::string error_message = e.what();
+
+        // UDP receive timeouts are expected when no PLC telegram is available
+        // within Receive_Timeout_* and do not indicate an unstable connection.
+        if (error_message.find("Resource temporarily unavailable") != std::string::npos)
+        {
+            RCLCPP_DEBUG_THROTTLE(
+                this->get_logger(),
+                *this->get_clock(),
+                1000,
+                "PLC receive timeout: %s",
+                e.what());
+        }
+        else
+        {
+            RCLCPP_WARN_THROTTLE(
+                this->get_logger(),
+                *this->get_clock(),
+                1000,
+                "PLC SendRecv failed: %s",
+                e.what());
+        }
     }
 
     // Letzte gültige Daten werden weiterhin publiziert.
