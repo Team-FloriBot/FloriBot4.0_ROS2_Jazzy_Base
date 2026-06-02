@@ -443,7 +443,7 @@
     <origin xyz="${rear_sensor_x} 0 ${camera_z}" rpy="0 ${camera_angle} ${pi}"/>
   </joint>
 
-  <link name="robosense_link">
+  <link name="rslidar">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -467,7 +467,7 @@
 
   <joint name="robosense_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="robosense_link"/>
+    <child link="rslidar"/>
     <origin xyz="${robosense_offset_x} ${robosense_offset_y} ${robosense_offset_z}" rpy="${robosense_roll} ${robosense_pitch} ${robosense_yaw}"/>
   </joint>
 
