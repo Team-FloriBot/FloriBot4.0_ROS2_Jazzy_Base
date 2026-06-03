@@ -36,8 +36,8 @@
   <xacro:property name="robosense_offset_x" value="0.225" />
   <xacro:property name="robosense_offset_y" value="0.0" />
   <xacro:property name="robosense_offset_z" value="0.815" />
-  <xacro:property name="robosense_roll" value="0.0" />
-  <xacro:property name="robosense_pitch" value="20.0" />
+  <xacro:property name="robosense_roll" value="180.0" />
+  <xacro:property name="robosense_pitch" value="-20.0" />
   <xacro:property name="robosense_yaw" value="0.0" />
 
 
