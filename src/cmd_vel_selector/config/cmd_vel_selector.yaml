@@ -7,8 +7,4 @@ cmd_vel_selector:
 
     topics:
       webteleop: "/cmd_vel/webteleop"
-      task1: "/cmd_vel/task1"
-      task2: "/cmd_vel/task2"
-      task3: "/cmd_vel/task3"
-      task4: "/cmd_vel/task4"
-      task5: "/cmd_vel/task5"
+      tasks: "/cmd_vel/tasks"
