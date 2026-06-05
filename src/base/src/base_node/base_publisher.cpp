@@ -181,8 +181,26 @@ void KinematicsPublisher::SpeedCallback(const base::msg::Wheels::SharedPtr msg)
     odom_msg.pose.pose.orientation.z = q.z();
     odom_msg.pose.pose.orientation.w = q.w();
 
+    odom_msg.pose.covariance = {
+        0.05, 0.0,  0.0, 0.0, 0.0, 0.0,
+        0.0,  0.10, 0.0, 0.0, 0.0, 0.0,
+        0.0,  0.0,  1e6, 0.0, 0.0, 0.0,
+        0.0,  0.0,  0.0, 1e6, 0.0, 0.0,
+        0.0,  0.0,  0.0, 0.0, 1e6, 0.0,
+        0.0,  0.0,  0.0, 0.0, 0.0, 0.20
+    };
+
     // Geschwindigkeit im child_frame
     odom_msg.twist.twist = Drive_.getSpeed();
+
+    odom_msg.twist.covariance = {
+        0.10, 0.0,  0.0, 0.0, 0.0, 0.0,
+        0.0,  1.00, 0.0, 0.0, 0.0, 0.0,
+        0.0,  0.0,  1e6, 0.0, 0.0, 0.0,
+        0.0,  0.0,  0.0, 1e6, 0.0, 0.0,
+        0.0,  0.0,  0.0, 0.0, 1e6, 0.0,
+        0.0,  0.0,  0.0, 0.0, 0.0, 0.50
+    };
 
     OdometryPublisher_->publish(odom_msg);
     // tf_broadaster_->sendTransform(transform_msg);
