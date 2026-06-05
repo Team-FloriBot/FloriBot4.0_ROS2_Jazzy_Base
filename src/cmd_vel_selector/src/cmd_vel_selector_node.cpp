@@ -27,11 +27,7 @@ public:
   : Node("cmd_vel_selector"),
     source_names_{
       "webteleop",
-      "task1",
-      "task2",
-      "task3",
-      "task4",
-      "task5"
+      "tasks"
     }
   {
     output_topic_ = this->declare_parameter<std::string>(
