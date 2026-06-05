@@ -195,7 +195,7 @@ void KinematicsPublisher::SpeedCallback(const base::msg::Wheels::SharedPtr msg)
 
     odom_msg.twist.covariance = {
         0.10, 0.0,  0.0, 0.0, 0.0, 0.0,
-        0.0,  1.00, 0.0, 0.0, 0.0, 0.0,
+        0.0,  0.001, 0.0, 0.0, 0.0, 0.0,
         0.0,  0.0,  1e6, 0.0, 0.0, 0.0,
         0.0,  0.0,  0.0, 1e6, 0.0, 0.0,
         0.0,  0.0,  0.0, 0.0, 1e6, 0.0,
