@@ -9,8 +9,8 @@ import xacro
 def generate_launch_description():
     package_name = "robot_description"
     
-    # Sim-Time Argument (Standard auf True, falls du Gazebo nutzt)
-    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+    # Sim-Time Argument (Standard auf False für den echten Roboter)
+    use_sim_time = LaunchConfiguration('use_sim_time', default='false')
 
     urdf_path = os.path.join(
         get_package_share_directory(package_name),
@@ -24,7 +24,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
             'use_sim_time',
-            default_value='true',
+            default_value='false',
             description='Use simulation (Gazebo) clock if true'),
 
         Node(
