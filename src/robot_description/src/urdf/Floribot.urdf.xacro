@@ -489,7 +489,7 @@
   <joint name="imu_joint" type="fixed">
     <parent link="base_link"/>
     <child link="xsens_mti_link"/>
-    <origin xyz="${imu_offset_x} ${imu_offset_y} ${imu_offset_z}" rpy="${pi} 0 ${pi}"/>
+    <origin xyz="${imu_offset_x} ${imu_offset_y} ${imu_offset_z}" rpy="${pi} 0 0"/>
   </joint>
 
 </robot>
