@@ -49,18 +49,51 @@ ekf_filter_node:
     odom0_twist_rejection_threshold: 2.0
 
     # --------------------------------------------------------------------------
+    # GPS-ODOMETRIE AUS navsat_transform_node
+    # --------------------------------------------------------------------------
+    # Optional:
+    # Wenn der GPS-Container nicht läuft, wird /odometry/gps nicht publiziert.
+    # Der EKF läuft dann weiter nur mit /odom und /imu/data.
+    odom1: /odometry/gps
+    odom1_queue_size: 10
+    odom1_differential: false
+    odom1_relative: false
+
+    # Reihenfolge:
+    # x, y, z,
+    # roll, pitch, yaw,
+    # vx, vy, vz,
+    # vroll, vpitch, vyaw,
+    # ax, ay, az
+    #
+    # Fusioniert werden:
+    # x aus GPS
+    # y aus GPS
+    #
+    # z wird wegen two_d_mode nicht fusioniert.
+    # yaw wird nicht aus GPS fusioniert.
+    odom1_config: [
+      true,  true,  false,
+      false, false, false,
+      false, false, false,
+      false, false, false,
+      false, false, false
+    ]
+
+    odom1_pose_rejection_threshold: 3.0
+    odom1_twist_rejection_threshold: 1.0
+
+    # --------------------------------------------------------------------------
     # IMU
     # --------------------------------------------------------------------------
     imu0: /imu/data
     imu0_queue_size: 50
 
     # Bei reiner angular_velocity.z-Fusion nicht differential/relative verwenden.
-    # Diese Parameter sind vor allem für Pose-/Orientation-Anteile relevant.
     imu0_differential: false
     imu0_relative: false
 
     # Ist aktuell egal, da keine lineare Beschleunigung fusioniert wird.
-    # Kann so bleiben.
     imu0_remove_gravitational_acceleration: true
 
     # Reihenfolge:
