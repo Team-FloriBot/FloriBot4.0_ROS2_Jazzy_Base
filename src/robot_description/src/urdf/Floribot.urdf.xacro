@@ -496,7 +496,7 @@
 
   <link name="gps_link">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="-0.06 0 0" rpy="0 0 0"/>
       <geometry>
         <cylinder length="0.035" radius="0.045"/>
       </geometry>
