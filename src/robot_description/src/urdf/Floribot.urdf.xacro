@@ -195,6 +195,35 @@
     <origin xyz="${-wheel_joint_2_mid_joint + vertical_length/2} 0 0"/>
   </joint>
 
+  <link name="axesRear_footprint">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${ghost_size} ${ghost_size} ${ghost_size}"/>
+      </geometry>
+      <material name="axes_rear_footprint_mat">
+        <color rgba="0.8 0 0.8 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${ghost_size} ${ghost_size} ${ghost_size}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.001"/>
+      <inertia ixx="1.369982" ixy="0.0" ixz="0.0" iyy="0.487502" iyz="0.0" izz="1.132200"/>
+    </inertial>
+  </link>
+
+  <joint name="j_axesRear_2_axesRear_footprint" type="fixed">
+    <parent link="axesRear"/>
+    <child link="axesRear_footprint"/>
+    <origin xyz="0.0 0.0 -${wheel_radius}" rpy="0 0 ${pi}"/>
+  </joint>
+
   <joint name="j_axesRear_2_rear_wagon" type="fixed">
     <parent link="axesRear"/>
     <child link="rear_wagon"/>
