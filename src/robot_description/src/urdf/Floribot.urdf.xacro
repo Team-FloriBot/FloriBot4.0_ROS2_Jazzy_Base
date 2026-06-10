@@ -40,6 +40,13 @@
   <xacro:property name="robosense_pitch" value="-0.3490658503989" />
   <xacro:property name="robosense_yaw" value="0.0" />
 
+  <xacro:property name="robosense_offset_rear_x" value="-0.225" />
+  <xacro:property name="robosense_offset_rear_y" value="0.0" />
+  <xacro:property name="robosense_offset_rear_z" value="0.815" />
+  <xacro:property name="robosense_rear_roll" value="${pi}" />
+  <xacro:property name="robosense_rear_pitch" value="-0.3490658503989" />
+  <xacro:property name="robosense_rear_yaw" value="${pi}" />
+
   <xacro:property name="gps_offset_x" value="${imu_offset_x}" />
   <xacro:property name="gps_offset_y" value="${imu_offset_y}" />
   <xacro:property name="gps_offset_z" value="${imu_offset_z + 0.02}" />
@@ -445,7 +452,7 @@
     <origin xyz="${rear_sensor_x} 0 ${camera_z}" rpy="0 ${camera_angle} ${pi}"/>
   </joint>
 
-  <link name="rslidar">
+  <link name="robosense_front_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -467,10 +474,38 @@
     </inertial>
   </link>
 
-  <joint name="robosense_joint" type="fixed">
+  <joint name="robosense_front_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="rslidar"/>
+    <child link="robosense_front_link"/>
     <origin xyz="${robosense_offset_x} ${robosense_offset_y} ${robosense_offset_z}" rpy="${robosense_roll} ${robosense_pitch} ${robosense_yaw}"/>
+  </joint>
+
+  <link name="robosense_rear_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.08" radius="0.055"/>
+      </geometry>
+      <material name="robosense_mat">
+        <color rgba="0.05 0.05 0.05 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.08" radius="0.055"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="0.0005" ixy="0.0" ixz="0.0" iyy="0.0005" iyz="0.0" izz="0.0005"/>
+    </inertial>
+  </link>
+
+  <joint name="robosense_rear_joint" type="fixed">
+    <parent link="axesRear"/>
+    <child link="robosense_rear_link"/>
+    <origin xyz="${robosense_offset_rear_x} ${robosense_offset_rear_y} ${robosense_offset_rear_z}" rpy="${robosense_rear_roll} ${robosense_rear_pitch} ${robosense_rear_yaw}"/>
   </joint>
 
   <link name="xsens_mti_link"> <!-- Link for IMU Sensor -->
