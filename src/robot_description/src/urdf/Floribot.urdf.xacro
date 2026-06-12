@@ -29,6 +29,11 @@
   <xacro:property name="camera_angle" value="0.6" />
   <xacro:property name="pi" value="3.141592653589793" />
 
+  <xacro:property name="camera_x_rear" value="0.275" />
+  <xacro:property name="camera_y_rear" value="0.035" />
+  <xacro:property name="camera_z_rear" value="0.825" />
+  <xacro:property name="camera_angle_rear" value="0.785398" />
+
   <xacro:property name="imu_offset_x" value="0.0" /> 
   <xacro:property name="imu_offset_y" value="0.0" />
   <xacro:property name="imu_offset_z" value="0.27" />
@@ -453,7 +458,7 @@
     <origin xyz="${front_sensor_x} 0 ${camera_z}" rpy="0 ${camera_angle} 0"/>
   </joint>
 
-  <link name="realsense_rear_link">
+  <link name="realsense_rear_link">  <!-- als REalsense oben deklariert -->
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -475,10 +480,11 @@
     </inertial>
   </link>
 
+
   <joint name="rear_camera_joint" type="fixed">
-    <parent link="rear_wagon"/>
+    <parent link="base_link"/>
     <child link="realsense_rear_link"/>
-    <origin xyz="${rear_sensor_x} 0 ${camera_z}" rpy="0 ${camera_angle} ${pi}"/>
+    <origin xyz="${camera_x_rear} ${camera_y_rear} ${camera_z_rear}" rpy="0 ${camera_angle_rear} 0"/>
   </joint>
 
   <link name="robosense_front_link">
