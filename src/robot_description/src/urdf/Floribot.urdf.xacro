@@ -56,6 +56,10 @@
   <xacro:property name="gps_offset_y" value="${imu_offset_y}" />
   <xacro:property name="gps_offset_z" value="${imu_offset_z + 0.02}" />
 
+  <xacro:property name="pan_tilt_offset_x" value="-0.23" />
+  <xacro:property name="pan_tilt_offset_y" value="-0.03" />
+  <xacro:property name="pan_tilt_offset_z" value="0.0" />
+
   <link name="base_footprint"/>
 
   <link name="base_link">
@@ -227,6 +231,35 @@
     <parent link="axesRear"/>
     <child link="axesRear_footprint"/>
     <origin xyz="0.0 0.0 -${wheel_radius}" rpy="0 0 ${pi}"/>
+  </joint>
+
+  <link name="pan_tilt_link_footprint">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${ghost_size} ${ghost_size} ${ghost_size}"/>
+      </geometry>
+      <material name="pan_tilt_footprint_mat">
+        <color rgba="0.8 0.8 0 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${ghost_size} ${ghost_size} ${ghost_size}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.001"/>
+      <inertia ixx="0.000001" ixy="0.0" ixz="0.0" iyy="0.000001" iyz="0.0" izz="0.000001"/>
+    </inertial>
+  </link>
+
+  <joint name="pan_tilt_link_footprint_joint" type="fixed">
+    <parent link="axesRear_footprint"/>
+    <child link="pan_tilt_link_footprint"/>
+    <origin xyz="${pan_tilt_offset_x} ${pan_tilt_offset_y} ${pan_tilt_offset_z}" rpy="0 0 ${pi}"/>
   </joint>
 
   <joint name="j_axesRear_2_rear_wagon" type="fixed">
